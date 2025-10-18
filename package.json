@@ -1,0 +1,40 @@
+{
+  "name": "ai-enterprise-studio",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI Enterprise Studio - Chess Analysis Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:web": "turbo run dev --filter=@ai-enterprise-studio/web-shell --filter=@ai-enterprise-studio/web-analysis",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint && npm run lint:python",
+    "lint:python": "ruff check apps libs",
+    "fix": "npm run fix:js && npm run fix:python",
+    "fix:js": "turbo run fix",
+    "fix:python": "black apps libs && isort apps libs && ruff check --fix apps libs",
+    "format": "npm run fix",
+    "check": "npm run lint && npm run fix:python",
+    "type-check": "turbo run type-check",
+    "clean": "turbo run clean"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "eslint": "^9.38.0",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.4.0",
+    "turbo": "^2.0.0",
+    "typescript-eslint": "^8.46.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "packageManager": "npm@10.0.0"
+}

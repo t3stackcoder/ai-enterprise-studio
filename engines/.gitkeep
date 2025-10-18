@@ -1,0 +1,4 @@
+# Place chess engine executables here:
+# - stockfish.exe
+# - lc0.exe
+# - weights/ (folder for Leela weights)

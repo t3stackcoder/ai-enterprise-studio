@@ -1,0 +1,16 @@
+{
+  "name": "@ai-enterprise-studio/config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.config.js",
+    "./typescript": "./tsconfig.base.json",
+    "./vite": "./vite.base.config.ts"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.56.12",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.1"
+  }
+}
