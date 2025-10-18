@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="vi        .teams-logo {
+            width: 66px;
+            height: 66px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-contrast);
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            overflow: hidden;
+            position: relative;
+        }="width=device-width, initial-scale=1.0">
+    <title>Teams Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-default);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow: hidden;
+            /* GPU acceleration for smooth rendering */
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* CSS Variables for theming */
+        .light-theme {
+            --bg-default: #F4F6FA;
+            --bg-paper: #FFFFFF;
+            --text-primary: #22223B;
+            --text-secondary: #4A4E69;
+            --text-disabled: #A0A0A0;
+            --primary-main: oklch(0.63 0.1699 149.21);
+            --primary-contrast: #FFFFFF;
+            --grey-900: #F4F6FA;
+            --grey-800: #E0E0E0;
+            --grey-700: #C8C8C8;
+            --grey-600: #A0A0A0;
+            --divider: #E0E0E0;
+            --icon-primary: #4A4E69;
+            --icon-hover: oklch(0.68 0.14 149.21);
+            --hover-bg: oklch(0.63 0.1699 149.21 / 0.1);
+            --tooltip-bg: #FFFFFF;
+            --tooltip-text: #22223B;
+            --tooltip-border: #C8C8C8;
+        }
+
+        .dark-theme {
+            --bg-default: #1F1F1F;
+            --bg-paper: #2D2D30;
+            --text-primary: #FFFFFF;
+            --text-secondary: #F0F0F0;
+            --text-disabled: #8A8A8A;
+            --primary-main: oklch(0.63 0.1699 149.21);
+            --primary-contrast: #FFFFFF;
+            --grey-900: #1F1F1F;
+            --grey-800: #2D2D30;
+            --grey-700: #404040;
+            --grey-600: #606060;
+            --divider: #404040;
+            --icon-primary: #E0E0E0;
+            --icon-hover: oklch(0.68 0.14 149.21);
+            --hover-bg: rgba(64, 64, 64, 0.3);
+            --tooltip-bg: rgba(0, 0, 0, 0.9);
+            --tooltip-text: #FFFFFF;
+            --tooltip-border: #404040;
+        }
+
+        /* Main layout container */
+        .interface-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            background-color: var(--bg-default);
+        }
+
+        /* Icon Sidebar */
+        .icon-sidebar {
+            width: 72px;
+            height: 100vh;
+            background-color: var(--grey-900);
+            border-right: 1px solid var(--divider);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+            contain: layout style;
+        }
+
+        .teams-logo {
+            width: 66px;
+            height: 66px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-contrast);
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .teams-logo img {
+            width: 200px;
+            height: auto;
+            position: absolute;
+            top: 0;
+            left: -2px;
+        }
+
+        .nav-icons {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-button {
+            width: 48px;
+            height: 48px;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            color: var(--icon-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            /* GPU acceleration */
+            transform: translateZ(0);
+            will-change: transform, background-color;
+            backface-visibility: hidden;
+            contain: layout style paint;
+        }
+
+        .nav-button:hover {
+            background-color: var(--hover-bg);
+            color: var(--primary-main);
+        }
+
+        .nav-button.active {
+            background-color: var(--hover-bg);
+            color: var(--primary-main);
+        }
+
+        .nav-button.active:hover {
+            background-color: var(--hover-bg);
+            color: var(--primary-main);
+        }
+
+        /* SVG Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            margin-bottom: 16px;
+            width: 48px;
+            height: 48px;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            color: var(--icon-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            /* GPU acceleration */
+            transform: translateZ(0);
+            will-change: transform, background-color;
+            backface-visibility: hidden;
+            contain: layout style paint;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--hover-bg);
+            color: var(--icon-hover);
+        }
+
+        /* Chat Sidebar */
+        .chat-sidebar {
+            width: 320px;
+            height: 100vh;
+            background-color: var(--bg-paper);
+            border-right: 1px solid var(--divider);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%) translateZ(0);
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: absolute;
+            left: 72px;
+            top: 0;
+            z-index: 10;
+            /* GPU acceleration optimizations */
+            will-change: transform;
+            backface-visibility: hidden;
+            -webkit-transform: translateX(-100%) translateZ(0);
+        }
+
+        .chat-sidebar.open {
+            transform: translateX(0) translateZ(0);
+            -webkit-transform: translateX(0) translateZ(0);
+        }
+
+        .chat-header {
+            height: 60px;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--divider);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-title {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .action-button {
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            border-radius: 50%;
+            color: var(--icon-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+            /* GPU acceleration */
+            transform: translateZ(0);
+            will-change: transform, background-color;
+            backface-visibility: hidden;
+            contain: layout style paint;
+        }
+
+        .action-button:hover {
+            background-color: var(--hover-bg);
+            color: var(--primary-main);
+        }
+
+        .chat-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: 60px;
+            background-color: var(--bg-paper);
+            border-bottom: 1px solid var(--divider);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 50;
+        }
+
+        .top-bar-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-default);
+            transition: margin-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin-left: 0;
+            /* GPU acceleration */
+            transform: translateZ(0);
+            will-change: margin-left;
+            backface-visibility: hidden;
+        }
+
+        .main-content.sidebar-open {
+            margin-left: 320px;
+        }
+
+        .content-body {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: auto;
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-text);
+            border: 1px solid var(--tooltip-border);
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1000;
+            left: 120%;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-left: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: 100%;
+            margin-top: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent var(--tooltip-border) transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Animation for theme transitions */
+        .fade-transition {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            /* GPU acceleration */
+            transform: translateZ(0);
+            will-change: opacity;
+            backface-visibility: hidden;
+        }
+
+        .fade-transition.show {
+            opacity: 1;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: oklch(0.63 0.1699 149.21 / 0.3);
+            transform: scale(0) translateZ(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+            /* GPU acceleration for smooth ripple */
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+        }
+
+        .ripple.contained {
+            animation: ripple-contained-animation 0.6s linear;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4) translateZ(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes ripple-contained-animation {
+            to {
+                transform: scale(1.5) translateZ(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme" id="body">
+    <div class="interface-container">
+        <!-- Chat Sidebar (positioned absolutely) -->
+        <div class="chat-sidebar">
+            <div class="chat-header">
+                <h2 class="chat-title">Chat</h2>
+                <div class="chat-actions">
+                    <button class="action-button" id="closeChatSidebar">
+                        <svg class="icon" style="width: 20px; height: 20px;" viewBox="0 0 24 24">
+                            <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="chat-content">
+                <!-- Chat content will go here -->
+            </div>
+        </div>
+
+        <!-- Icon Sidebar -->
+        <div class="icon-sidebar">
+            <!-- Teams Logo -->
+            <div class="teams-logo">
+                <img src="Logo.png" alt="Logo" />
+            </div>
+            
+            <!-- Navigation Icons -->
+            <div class="nav-icons">
+                <div class="tooltip">
+                    <button class="nav-button">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M17,9H7V7C7,6.45 7.45,6 8,6H16C16.55,6 17,6.45 17,7V9M18,15V9C18,7.89 17.11,7 16,7V6C16,4.89 15.11,4 14,4H10C8.89,4 8,4.89 8,6V7C6.89,7 6,7.89 6,9V15C6,16.11 6.89,17 8,17H16C17.11,17 18,16.11 18,15M22,8.5L20,10.5V8C20,7.45 19.55,7 19,7H18V15H19C19.55,15 20,14.55 20,14V11.5L22,13.5V8.5Z"/>
+                        </svg>
+                    </button>
+                    <span class="tooltiptext">Video Production</span>
+                </div>
+
+                <div class="tooltip">
+                    <button class="nav-button">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M10,10.5C10,11.33 9.33,12 8.5,12C7.67,12 7,11.33 7,10.5C7,9.67 7.67,9 8.5,9C9.33,9 10,9.67 10,10.5M12,14C9.58,14 7.56,15.32 6.36,17.25H17.64C16.44,15.32 14.42,14 12,14M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21C16.97,21 21,16.97 21,12A9,9 0 0,0 12,3M12,19C7.03,19 3,14.97 3,10C3,5.03 7.03,1 12,1C16.97,1 21,5.03 21,10C21,14.97 16.97,19 12,19Z"/>
+                            <path d="M9,11H15L13,13H11V15H13L15,17H9V11Z"/>
+                            <circle cx="12" cy="5.5" r="1"/>
+                            <circle cx="6.5" cy="7.5" r="1"/>
+                            <circle cx="17.5" cy="7.5" r="1"/>
+                        </svg>
+                    </button>
+                    <span class="tooltiptext">Creative Copilot</span>
+                </div>
+
+                <div class="tooltip">
+                    <button class="nav-button">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12,1C7,1 3,5 3,10V17A3,3 0 0,0 6,20H8V12H6V10A6,6 0 0,1 12,4A6,6 0 0,1 18,10V12H16V20H18A3,3 0 0,0 21,17V10C21,5 17,1 12,1Z"/>
+                        </svg>
+                    </button>
+                    <span class="tooltiptext">Podcast Studio</span>
+                </div>
+            </div>
+
+            <!-- Theme Toggle -->
+            <div class="tooltip">
+                <button class="theme-toggle" id="themeToggle">
+                    <svg class="icon fade-transition show" id="lightIcon" viewBox="0 0 24 24">
+                        <path d="M12,18C11.11,18 10.26,17.8 9.5,17.45C11.56,16.5 13,14.42 13,12C13,9.58 11.56,7.5 9.5,6.55C10.26,6.2 11.11,6 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>
+                    </svg>
+                    <svg class="icon fade-transition" id="darkIcon" viewBox="0 0 24 24" style="position: absolute;">
+                        <path d="M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>
+                    </svg>
+                </button>
+                <span class="tooltiptext">Toggle light/dark mode</span>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="top-bar-title">Welcome to Mayfly</div>
+            </div>
+            <div class="content-body">
+                <!-- Main content will go here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.getElementById('body');
+        const lightIcon = document.getElementById('lightIcon');
+        const darkIcon = document.getElementById('darkIcon');
+        
+        let isDark = true; // Start with dark theme
+
+        function updateIcons() {
+            if (isDark) {
+                lightIcon.classList.add('show');
+                darkIcon.classList.remove('show');
+            } else {
+                lightIcon.classList.remove('show');
+                darkIcon.classList.add('show');
+            }
+        }
+
+        function toggleTheme() {
+            isDark = !isDark;
+            
+            if (isDark) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+            }
+            
+            updateIcons();
+            
+            // Store theme preference
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            isDark = savedTheme === 'dark';
+            if (isDark) {
+                body.classList.add('dark-theme');
+                body.classList.remove('light-theme');
+            } else {
+                body.classList.add('light-theme');
+                body.classList.remove('dark-theme');
+            }
+            updateIcons();
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // Initialize icons on page load
+        updateIcons();
+
+        // Add hover effects for nav buttons
+        const navButtons = document.querySelectorAll('.nav-button');
+        const chatSidebar = document.querySelector('.chat-sidebar');
+        const closeChatSidebar = document.getElementById('closeChatSidebar');
+        const mainContent = document.querySelector('.main-content');
+        const chatTitle = document.querySelector('.chat-title');
+        
+        // Define titles for each navigation icon
+        const navTitles = ['Video Production', 'Creative Copilot', 'Podcast Studio'];
+        
+        navButtons.forEach((button, index) => {
+            button.addEventListener('mousedown', function(e) {
+                // Create ripple effect on mouse down
+                createRipple(e, this);
+            });
+            
+            button.addEventListener('click', function() {
+                // Check if the sidebar is already open
+                const isSidebarOpen = chatSidebar.classList.contains('open');
+                const isCurrentButtonActive = this.classList.contains('active');
+                
+                if (isSidebarOpen && isCurrentButtonActive) {
+                    // If sidebar is open and clicking the same active button, close it
+                    chatSidebar.classList.remove('open');
+                    mainContent.classList.remove('sidebar-open');
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                } else {
+                    // If sidebar is closed OR clicking a different button, open/switch to this section
+                    // Remove active class from all buttons
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update chat sidebar title based on clicked icon
+                    chatTitle.textContent = navTitles[index];
+                    
+                    // Open chat sidebar and adjust main content (if not already open)
+                    chatSidebar.classList.add('open');
+                    mainContent.classList.add('sidebar-open');
+                }
+            });
+        });
+
+        // Close chat sidebar functionality
+        closeChatSidebar.addEventListener('mousedown', function(e) {
+            createRipple(e, this, true); // Pass true for contained ripple
+        });
+
+        closeChatSidebar.addEventListener('click', function() {
+            chatSidebar.classList.remove('open');
+            mainContent.classList.remove('sidebar-open');
+            // Also remove active state from nav buttons when closing
+            navButtons.forEach(btn => btn.classList.remove('active'));
+        });
+
+        // Add ripple effect to theme toggle
+        themeToggle.addEventListener('mousedown', function(e) {
+            createRipple(e, this);
+        });
+
+        // Set first nav button as active by default and open sidebar initially
+        if (navButtons.length > 0) {
+            // Don't auto-select any nav button - let user make the choice
+            // navButtons[0].classList.add('active');
+            // Don't auto-open sidebar on load, let user click to open
+        }
+
+        // Ripple effect function
+        function createRipple(event, element, contained = false) {
+            const button = element;
+            const circle = document.createElement("span");
+            const rect = button.getBoundingClientRect();
+            
+            if (contained) {
+                // For contained ripple, use smaller size and center it
+                const size = Math.min(button.clientWidth, button.clientHeight) * 0.8;
+                const radius = size / 2;
+                
+                circle.style.width = circle.style.height = `${size}px`;
+                circle.style.left = `${(button.clientWidth - size) / 2}px`;
+                circle.style.top = `${(button.clientHeight - size) / 2}px`;
+            } else {
+                // For normal ripple, use click position
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+                
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - rect.left - radius}px`;
+                circle.style.top = `${event.clientY - rect.top - radius}px`;
+            }
+            
+            circle.classList.add("ripple");
+            
+            // Add contained class for smaller ripple effect
+            if (contained) {
+                circle.classList.add("contained");
+            }
+            
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+            
+            button.appendChild(circle);
+            
+            // Remove ripple after animation
+            setTimeout(() => {
+                if (circle.parentNode) {
+                    circle.parentNode.removeChild(circle);
+                }
+            }, 600);
+        }
+    </script>
+</body>
+</html>

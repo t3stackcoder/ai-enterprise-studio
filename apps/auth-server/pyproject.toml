@@ -1,0 +1,56 @@
+[tool.pytest.ini_options]
+# Pytest configuration for auth-server tests
+
+# Test discovery
+testpaths = [
+    ".",
+]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+
+# Output options
+addopts = [
+    "-v",                           # Verbose output
+    "--strict-markers",             # Strict marker usage
+    "--tb=short",                   # Shorter traceback format
+    "--disable-warnings",           # Disable warnings in output
+    "-ra",                          # Show summary of all test results
+    "--color=yes",                  # Colored output
+]
+
+# Markers for categorizing tests
+markers = [
+    "auth: Authentication tests (signup, signin, refresh)",
+    "rbac: Role-based access control tests",
+    "integration: Integration tests",
+    "unit: Unit tests",
+    "slow: Slow-running tests",
+]
+
+# Asyncio configuration
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+# Coverage options (optional)
+# Uncomment to enable coverage reporting
+# addopts = [
+#     "--cov=.",
+#     "--cov-report=html",
+#     "--cov-report=term-missing",
+# ]
+
+# Log level during tests
+log_cli = false
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)s] %(message)s"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
+# Ignore certain paths
+norecursedirs = [
+    ".*",
+    "__pycache__",
+    "*.egg",
+    "build",
+    "dist",
+]

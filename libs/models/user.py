@@ -5,6 +5,7 @@ User model for VisionScope authentication
 import uuid
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.sql import func
 from sqlalchemy.types import String as SQLString
@@ -19,7 +20,7 @@ class UUID(TypeDecorator):
 
     def load_dialect_impl(self, dialect):
         if dialect.name == "postgresql":
-            return dialect.type_descriptor(dialect.UUID())
+            return dialect.type_descriptor(PostgreSQL_UUID(as_uuid=True))
         else:
             return dialect.type_descriptor(SQLString(36))
 
@@ -27,7 +28,7 @@ class UUID(TypeDecorator):
         if value is None:
             return value
         elif dialect.name == "postgresql":
-            return str(value)
+            return value if isinstance(value, uuid.UUID) else uuid.UUID(value)
         else:
             return str(value)
 

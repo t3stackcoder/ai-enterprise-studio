@@ -5,7 +5,7 @@ Authentication service for VisionScope
 import os
 import secrets
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from pathlib import Path
 
 # Add libs to path
@@ -41,7 +41,7 @@ class AuthService:
             return None
 
         # Update last login
-        user.last_login = datetime.utcnow()
+        user.last_login = datetime.now(UTC)
         self.db.commit()
 
         return await self._create_token_response(user)
@@ -60,16 +60,19 @@ class AuthService:
         if existing_user:
             return None
 
+        # Hash the password
+        password_hash = self._hash_password(request.password)
+
         # Create new user
         user = User(
             username=request.username,
-            password_hash=self._hash_password(request.password),
+            password_hash=password_hash,
             email_address=request.email_address,
             first_name=request.first_name,
             last_name=request.last_name,
             role="user",
             subscription_tier="free",
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(UTC),
         )
 
         self.db.add(user)
@@ -104,8 +107,8 @@ class AuthService:
             "username": user.username,
             "role": user.role,
             "subscription_tier": user.subscription_tier,
-            "exp": datetime.utcnow() + timedelta(minutes=self.access_token_expire_minutes),
-            "iat": datetime.utcnow(),
+            "exp": datetime.now(UTC) + timedelta(minutes=self.access_token_expire_minutes),
+            "iat": datetime.now(UTC),
             "iss": os.getenv("JWT_ISSUER", "visionscope-api"),
             "aud": os.getenv("JWT_AUDIENCE", "visionscope-users"),
             "type": "access",
@@ -133,7 +136,7 @@ class AuthService:
         refresh_token = self._generate_refresh_token()
 
         user.refresh_token = refresh_token
-        user.refresh_token_expiry_time = datetime.utcnow() + timedelta(
+        user.refresh_token_expiry_time = datetime.now(UTC) + timedelta(
             days=self.refresh_token_expire_days
         )
 
@@ -150,8 +153,15 @@ class AuthService:
         if user.refresh_token != refresh_token:
             return None
 
-        if user.refresh_token_expiry_time and user.refresh_token_expiry_time < datetime.utcnow():
-            return None
+        if user.refresh_token_expiry_time:
+            # Handle timezone-naive datetime from database
+            if user.refresh_token_expiry_time.tzinfo is None:
+                expiry_aware = user.refresh_token_expiry_time.replace(tzinfo=UTC)
+            else:
+                expiry_aware = user.refresh_token_expiry_time
+
+            if expiry_aware < datetime.now(UTC):
+                return None
 
         return user
 

@@ -74,13 +74,13 @@ def get_current_user(
     """
     Get current authenticated user from token
     """
-    username = token_payload.get("sub")
-    if not username:
+    user_id = token_payload.get("sub")
+    if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload"
         )
 
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(User).filter(User.user_id == user_id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
 

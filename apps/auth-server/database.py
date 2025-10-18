@@ -44,7 +44,7 @@ def init_db():
     Call this on application startup
     """
     Base.metadata.create_all(bind=engine)
-    print(f"✅ Database initialized: {DATABASE_URL}")
+    print(f"Database initialized: {DATABASE_URL}")
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -85,4 +85,4 @@ def close_db():
     Call this on application shutdown
     """
     engine.dispose()
-    print("✅ Database connections closed")
+    print("Database connections closed")

@@ -11,6 +11,7 @@ sys.path.insert(0, str(project_root / "libs"))
 
 import logging
 import os
+from contextlib import asynccontextmanager
 
 import uvicorn
 from auth_setup import setup_auth_core, setup_auth_rbac
@@ -28,7 +29,26 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Create FastAPI app
+
+# Lifespan context manager for startup/shutdown events
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Manage application lifespan (startup and shutdown)"""
+    # Startup
+    logger.info("🚀 Starting Auth Server...")
+    init_db()
+    logger.info("✅ Auth Server ready!")
+    logger.info("📚 API Docs: http://localhost:8000/api/docs")
+
+    yield
+
+    # Shutdown
+    logger.info("👋 Shutting down Auth Server...")
+    close_db()
+    logger.info("✅ Shutdown complete")
+
+
+# Create FastAPI app with lifespan
 app = FastAPI(
     title="AI Enterprise Studio - Auth API",
     description="Authentication and authorization service with JWT and RBAC",
@@ -36,29 +56,8 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
+    lifespan=lifespan,
 )
-
-
-# Startup event
-@app.on_event("startup")
-async def startup_event():
-    """Initialize services on startup"""
-    logger.info("🚀 Starting Auth Server...")
-
-    # Initialize database
-    init_db()
-
-    logger.info("✅ Auth Server ready!")
-    logger.info("📚 API Docs: http://localhost:8000/api/docs")
-
-
-# Shutdown event
-@app.on_event("shutdown")
-async def shutdown_event():
-    """Cleanup on shutdown"""
-    logger.info("👋 Shutting down Auth Server...")
-    close_db()
-    logger.info("✅ Shutdown complete")
 
 
 # Load environment variables
