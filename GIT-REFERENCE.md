@@ -63,6 +63,22 @@ git reset --hard
 git checkout -- <filename>
 ```
 
+## Push to GitHub (First Time Setup)
+
+If you haven't pushed to GitHub yet:
+
+1. Create a new repository on GitHub named `ai-enterprise-studio`
+   - Go to github.com → New Repository
+   - Name: `ai-enterprise-studio`
+   - Don't initialize with README, .gitignore, or license
+
+2. Add GitHub as remote and push:
+```bash
+git remote add origin https://github.com/t3stackcoder/ai-enterprise-studio.git
+git branch -M main
+git push -u origin main
+```
+
 ## Typical Workflow
 
 1. Make changes to your code

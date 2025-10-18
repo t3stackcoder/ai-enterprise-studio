@@ -291,6 +291,11 @@ class EngineManager:
                             if i in multipv_lines
                         ]
 
+                        # Debug logging
+                        logger.info(
+                            f"MultiPV={multipv}, lines_list length={len(lines_list)}, current_multipv={current_multipv}"
+                        )
+
                         update_data = {
                             "type": "analysis_update",
                             "depth": actual_depth,
@@ -303,8 +308,8 @@ class EngineManager:
                                 else (pv[0] if pv else None)
                             ),
                             "lines": (
-                                lines_list if len(lines_list) > 1 else None
-                            ),  # Include all candidate moves
+                                lines_list if multipv > 1 else None
+                            ),  # Send lines array when MultiPV is requested
                         }
                         await update_callback(update_data)
 

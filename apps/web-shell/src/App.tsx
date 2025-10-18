@@ -1,4 +1,8 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+
+// @ts-expect-error - Module federation remote
+const AnalysisApp = lazy(() => import('analysis/AnalysisApp'))
 
 function Home() {
   return (
@@ -14,7 +18,9 @@ function Analysis() {
   return (
     <div>
       <h2>Analysis</h2>
-      <p>Chess analysis remote will be loaded here.</p>
+      <Suspense fallback={<div>Loading analysis app...</div>}>
+        <AnalysisApp />
+      </Suspense>
     </div>
   )
 }

@@ -1,0 +1,12 @@
+{
+  "include": [
+    "apps/auth-server"
+  ],
+  "extraPaths": [
+    "libs"
+  ],
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": false,
+  "reportMissingTypeStubs": false
+}

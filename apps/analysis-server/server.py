@@ -79,7 +79,9 @@ async def handle_analyze(data: dict[str, Any], websocket=None) -> dict[str, Any]
         engine = data.get("engine", "stockfish").lower()
         depth = data.get("depth", 20)
         movetime = data.get("movetime")  # milliseconds
-        multipv = data.get("multipv", 1)  # Number of variations (Stockfish only)
+        multipv = data.get("multiPV") or data.get(
+            "multipv", 1
+        )  # Accept both camelCase and lowercase
         stream = data.get("stream", False)  # Enable real-time streaming
         infinite = data.get("infinite", False)  # Infinite analysis mode
 

@@ -19,7 +19,7 @@
     "fix:js": "turbo run fix",
     "fix:python": "black apps libs && isort apps libs && ruff check --fix apps libs",
     "format": "npm run fix",
-    "check": "npm run lint && npm run fix:python",
+    "check": "npm run lint",
     "type-check": "turbo run type-check",
     "clean": "turbo run clean"
   },
