@@ -54,3 +54,10 @@ Thumbs.db
 # Logs
 *.log
 
+# Docker volumes and data
+docker/postgres/data/
+docker/redis/data/
+docker/rabbitmq/data/
+
+# Docker environment
+.env.docker

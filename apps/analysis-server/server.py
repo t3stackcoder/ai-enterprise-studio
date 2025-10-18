@@ -6,11 +6,20 @@ Handles Stockfish and Leela Chess Zero engine analysis
 import asyncio
 import json
 import logging
+import os
 from typing import Any
 
 import websockets
 from engine_manager import EngineManager
 from websockets.server import serve
+from auth import authenticate_websocket
+
+# Load environment variables
+from pathlib import Path
+from dotenv import load_dotenv
+
+project_root = Path(__file__).parent.parent.parent
+load_dotenv(project_root / ".env")
 
 # Configure logging
 logging.basicConfig(
@@ -28,17 +37,29 @@ engine_manager = EngineManager()
 async def handle_client(websocket):
     """Handle individual client WebSocket connection"""
     client_id = id(websocket)
+
+    # Authenticate the connection first
+    user_payload = await authenticate_websocket(websocket)
+    if not user_payload:
+        logger.warning(f"Client {client_id} failed authentication")
+        return
+
+    # Authentication successful
+    username = user_payload.get('sub')
+    user_role = user_payload.get('role', 'user')
+    subscription_tier = user_payload.get('subscription_tier', 'free')
+
     active_connections.add(websocket)
-    logger.info(f"Client {client_id} connected. Total connections: {len(active_connections)}")
+    logger.info(f"Client {client_id} ({username}, {user_role}, {subscription_tier}) connected. Total connections: {len(active_connections)}")
 
     try:
         async for message in websocket:
             try:
                 data = json.loads(message)
-                logger.info(f"Received from {client_id}: {data.get('type', 'unknown')}")
+                logger.info(f"Received from {client_id} ({username}): {data.get('type', 'unknown')}")
 
-                # Route to appropriate handler
-                response = await handle_message(data, websocket)
+                # Route to appropriate handler (pass user info for authorization)
+                response = await handle_message(data, websocket, user_payload)
 
                 # Send response back to client
                 await websocket.send(json.dumps(response))
@@ -52,18 +73,18 @@ async def handle_client(websocket):
                 await websocket.send(json.dumps(error_response))
 
     except websockets.exceptions.ConnectionClosed:
-        logger.info(f"Client {client_id} disconnected")
+        logger.info(f"Client {client_id} ({username}) disconnected")
     finally:
         active_connections.remove(websocket)
         logger.info(f"Total connections: {len(active_connections)}")
 
 
-async def handle_message(data: dict[str, Any], websocket=None) -> dict[str, Any]:
+async def handle_message(data: dict[str, Any], websocket=None, user_payload: dict = None) -> dict[str, Any]:
     """Route and handle different message types"""
     message_type = data.get("type")
 
     if message_type == "analyze":
-        return await handle_analyze(data, websocket)
+        return await handle_analyze(data, websocket, user_payload)
     elif message_type == "ping":
         return {"type": "pong", "timestamp": data.get("timestamp")}
     elif message_type == "status":
@@ -72,8 +93,8 @@ async def handle_message(data: dict[str, Any], websocket=None) -> dict[str, Any]
         return {"type": "error", "message": f"Unknown message type: {message_type}"}
 
 
-async def handle_analyze(data: dict[str, Any], websocket=None) -> dict[str, Any]:
-    """Handle analysis request"""
+async def handle_analyze(data: dict[str, Any], websocket=None, user_payload: dict = None) -> dict[str, Any]:
+    """Handle analysis request with authorization checks"""
     try:
         fen = data.get("fen")
         engine = data.get("engine", "stockfish").lower()
@@ -98,6 +119,9 @@ async def handle_analyze(data: dict[str, Any], websocket=None) -> dict[str, Any]
         # Normalize leela/lc0
         if engine in ["leela", "lc0"]:
             engine = "leela"
+
+        # All authenticated users have full access (for now)
+        # TODO: Add subscription-based limits when business requirements are defined
 
         logger.info(
             f"Analyzing with {engine}: depth={depth}, movetime={movetime}, multipv={multipv}, stream={stream}, infinite={infinite}"
@@ -147,10 +171,8 @@ async def handle_status() -> dict[str, Any]:
 
 async def main():
     """Start the WebSocket server"""
-    import os
-
-    host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8765"))
+    host = os.getenv("ANALYSIS_SERVER_HOST", "0.0.0.0")
+    port = int(os.getenv("ANALYSIS_SERVER_PORT", "8765"))
 
     # Initialize engines
     await engine_manager.initialize()

@@ -61,6 +61,10 @@ async def shutdown_event():
     logger.info("✅ Shutdown complete")
 
 
+# Load environment variables
+load_dotenv()
+
+
 # Health check endpoint
 @app.get("/health")
 async def health_check():
@@ -97,7 +101,7 @@ setup_auth_rbac(app)  # Optional: RBAC examples and protected endpoints
 
 # Run server
 if __name__ == "__main__":
-    port = int(os.getenv("AUTH_SERVER_PORT", "8000"))
+    port = int(os.getenv("AUTH_SERVER_PORT", "8001"))
     host = os.getenv("AUTH_SERVER_HOST", "0.0.0.0")
 
     logger.info(f"🌐 Starting server on {host}:{port}")
