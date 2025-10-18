@@ -3,6 +3,7 @@ Authentication setup for VisionScope FastAPI app
 Clean extension methods for auth configuration
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -21,10 +22,16 @@ def setup_auth_core(app: FastAPI):
     Call this for essential auth functionality
     """
 
+    # CORS configuration - get allowed origins from environment
+    allowed_origins = os.getenv(
+        "ALLOWED_ORIGINS",
+        "http://localhost:5173,http://localhost:3000"
+    ).split(",")
+
     # CORS configuration (equivalent to C# UseCors("AllowAll"))
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:5173", "http://localhost:3000"],  # Frontend URLs
+        allow_origins=allowed_origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

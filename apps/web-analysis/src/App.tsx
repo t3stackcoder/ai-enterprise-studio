@@ -24,7 +24,9 @@ export default function App() {
   const wsRef = useRef<WebSocket | null>(null)
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8765')
+    // Get WebSocket URL from environment variable or use default
+    const wsUrl = import.meta.env.VITE_ANALYSIS_SERVER_WS || 'ws://localhost:8765'
+    const ws = new WebSocket(wsUrl)
     wsRef.current = ws
 
     ws.onopen = () => {
