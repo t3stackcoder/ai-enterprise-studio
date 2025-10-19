@@ -36,6 +36,14 @@
       "cache": false,
       "persistent": true
     },
+    "@ai-enterprise-studio/analysis-server#dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "@ai-enterprise-studio/video-analysis-server#dev": {
+      "cache": false,
+      "persistent": true
+    },
     "@ai-enterprise-studio/web-shell#build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
@@ -50,3 +58,5 @@
     }
   }
 }
+
+

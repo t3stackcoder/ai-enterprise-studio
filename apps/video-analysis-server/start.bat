@@ -1,0 +1,3 @@
+@echo off
+echo Starting Video Analysis Server...
+python server.py

@@ -1,0 +1,15 @@
+{
+  "name": "@ai-enterprise-studio/video-analysis-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Video Analysis AI Service - FastAPI Server",
+  "scripts": {
+    "dev": "python server.py",
+    "test": "python -m pytest gpu/testing/ -v",
+    "test:quick": "python -m pytest gpu/testing/test_gpu.py",
+    "clean": "rm -rf __pycache__ .pytest_cache gpu/__pycache__",
+    "install": "pip install -r requirements.txt"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

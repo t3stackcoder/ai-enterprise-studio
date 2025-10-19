@@ -1,0 +1,46 @@
+# Docker ignore for video-analysis-server
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment
+.env
+.env.local
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Turbo
+.turbo/
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md
+!README.md
+
+# Don't ignore test files since we want them in the image for validation
+# but exclude test outputs
+*.log
