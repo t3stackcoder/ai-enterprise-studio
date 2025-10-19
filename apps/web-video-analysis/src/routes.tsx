@@ -1,11 +1,11 @@
-// Routes configuration for web-analysis
+// Routes configuration for web-video-analysis
 // This can be imported by the host shell when using Module Federation
 
 import App from './App'
 
 export const routes = [
   {
-    path: '/analysis',
+    path: '/video-analysis',
     component: App,
   },
 ]

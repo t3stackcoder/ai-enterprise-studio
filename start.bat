@@ -24,9 +24,9 @@ start "Auth Server" cmd /k "cd apps\auth-server && python server.py"
 REM Wait a few seconds for auth server to start
 timeout /t 5 /nobreak >nul
 
-REM Build web-analysis remote
-echo Building web-analysis remote...
-cd apps\web-analysis
+REM Build web-chess-analysis remote
+echo Building web-chess-analysis remote...
+cd apps\web-chess-analysis
 call npm run build
 cd ..\..
 echo.
@@ -40,7 +40,7 @@ timeout /t 5 /nobreak >nul
 
 REM Start Web Analysis (preview mode for built remote)
 echo Starting Web Analysis (built remote)...
-start "Web Analysis" cmd /k "cd apps\web-analysis && npm run preview"
+start "Web Analysis" cmd /k "cd apps\web-chess-analysis && npm run preview"
 
 REM Wait for preview to start
 timeout /t 3 /nobreak >nul

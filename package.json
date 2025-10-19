@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "dev:web": "turbo run dev --filter=@ai-enterprise-studio/web-shell --filter=@ai-enterprise-studio/web-analysis",
+    "dev:web": "turbo run dev --filter=@ai-enterprise-studio/web-shell --filter=@ai-enterprise-studio/web-chess-analysis",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint && npm run lint:python",

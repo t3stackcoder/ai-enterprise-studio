@@ -1,0 +1,382 @@
+/* Light theme CSS variables */
+.light-theme {
+  --bg-default: #F4F6FA;
+  --bg-paper: #FFFFFF;
+  --text-primary: #22223B;
+  --text-secondary: #4A4E69;
+  --text-disabled: #A0A0A0;
+  --primary-main: oklch(0.63 0.1699 149.21);
+  --primary-contrast: #FFFFFF;
+  --grey-900: #F4F6FA;
+  --grey-800: #E0E0E0;
+  --grey-700: #C8C8C8;
+  --grey-600: #A0A0A0;
+  --divider: #E0E0E0;
+  --icon-primary: #4A4E69;
+  --icon-hover: oklch(0.68 0.14 149.21);
+  --hover-bg: oklch(0.63 0.1699 149.21 / 0.1);
+  --tooltip-bg: #FFFFFF;
+  --tooltip-text: #22223B;
+  --tooltip-border: #C8C8C8;
+}
+
+/* Dark theme CSS variables */
+.dark-theme {
+  --bg-default: #1F1F1F;
+  --bg-paper: #2D2D30;
+  --text-primary: #FFFFFF;
+  --text-secondary: #F0F0F0;
+  --text-disabled: #8A8A8A;
+  --primary-main: oklch(0.63 0.1699 149.21);
+  --primary-contrast: #FFFFFF;
+  --grey-900: #1F1F1F;
+  --grey-800: #2D2D30;
+  --grey-700: #404040;
+  --grey-600: #606060;
+  --divider: #404040;
+  --icon-primary: #E0E0E0;
+  --icon-hover: oklch(0.68 0.14 149.21);
+  --hover-bg: rgba(64, 64, 64, 0.3);
+  --tooltip-bg: rgba(0, 0, 0, 0.9);
+  --tooltip-text: #FFFFFF;
+  --tooltip-border: #404040;
+}
+
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-default);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow: hidden;
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Main layout container */
+.interface-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-color: var(--bg-default);
+}
+
+/* Icon Sidebar */
+.icon-sidebar {
+  width: 72px;
+  height: 100vh;
+  background-color: var(--grey-900);
+  border-right: 1px solid var(--divider);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100;
+  contain: layout style;
+}
+
+.teams-logo {
+  width: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-contrast);
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.teams-logo img {
+  width: 200px;
+  height: auto;
+  position: absolute;
+  top: 0;
+  left: -2px;
+}
+
+.nav-icons {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-button {
+  width: 48px;
+  height: 48px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--icon-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform, background-color;
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.nav-button:hover {
+  background-color: var(--hover-bg);
+  color: var(--primary-main);
+}
+
+.nav-button.active {
+  background-color: var(--hover-bg);
+  color: var(--primary-main);
+}
+
+.nav-button.active:hover {
+  background-color: var(--hover-bg);
+  color: var(--primary-main);
+}
+
+/* SVG Icons */
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  margin-bottom: 16px;
+  width: 48px;
+  height: 48px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--icon-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform, background-color;
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.theme-toggle:hover {
+  background-color: var(--hover-bg);
+  color: var(--icon-hover);
+}
+
+/* Chat Sidebar */
+.chat-sidebar {
+  width: 320px;
+  height: 100vh;
+  background-color: var(--bg-paper);
+  border-right: 1px solid var(--divider);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%) translateZ(0);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: absolute;
+  left: 72px;
+  top: 0;
+  z-index: 10;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-transform: translateX(-100%) translateZ(0);
+}
+
+.chat-sidebar.open {
+  transform: translateX(0) translateZ(0);
+  -webkit-transform: translateX(0) translateZ(0);
+}
+
+.chat-header {
+  height: 60px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--divider);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-title {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.chat-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.action-button {
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: var(--icon-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transform: translateZ(0);
+  will-change: transform, background-color;
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.action-button:hover {
+  background-color: var(--hover-bg);
+  color: var(--primary-main);
+}
+
+.chat-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+/* Top Bar */
+.top-bar {
+  height: 60px;
+  background-color: var(--bg-paper);
+  border-bottom: 1px solid var(--divider);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 50;
+}
+
+.top-bar-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-default);
+  transition: margin-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  margin-left: 0;
+  transform: translateZ(0);
+  will-change: margin-left;
+  backface-visibility: hidden;
+}
+
+.main-content.sidebar-open {
+  margin-left: 320px;
+}
+
+.content-body {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  background-color: var(--tooltip-bg);
+  color: var(--tooltip-text);
+  border: 1px solid var(--tooltip-border);
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 1000;
+  left: 120%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent var(--tooltip-border) transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Animation for theme transitions */
+.fade-transition {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transform: translateZ(0);
+  will-change: opacity;
+  backface-visibility: hidden;
+}
+
+.fade-transition.show {
+  opacity: 1;
+}
+
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: oklch(0.63 0.1699 149.21 / 0.3);
+  transform: scale(0) translateZ(0);
+  animation: ripple-animation 0.6s linear;
+  pointer-events: none;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.ripple.contained {
+  animation: ripple-contained-animation 0.6s linear;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4) translateZ(0);
+    opacity: 0;
+  }
+}
+
+@keyframes ripple-contained-animation {
+  to {
+    transform: scale(1.5) translateZ(0);
+    opacity: 0;
+  }
+}

@@ -28,7 +28,11 @@
       "cache": false,
       "persistent": true
     },
-    "@ai-enterprise-studio/web-analysis#dev": {
+    "@ai-enterprise-studio/web-chess-analysis#dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "@ai-enterprise-studio/web-video-analysis#dev": {
       "cache": false,
       "persistent": true
     },
@@ -36,7 +40,11 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "@ai-enterprise-studio/web-analysis#build": {
+    "@ai-enterprise-studio/web-chess-analysis#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "@ai-enterprise-studio/web-video-analysis#build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     }
